@@ -82,7 +82,7 @@ class GATLayer(Module):
         return h
 
     def __repr__(self):
-        return self.__class__.__name__ + ' (' + str(self.in_features) + ' -> ' + str(self.out_features) + ')'
+        return self.__class__.__name__ + ' (' + str(self.in_dim) + ' -> ' + str(self.out_dim) + ')'
 
 
 def getFeatureMat(userNum, itemNum, embedSize):
@@ -105,7 +105,7 @@ def buildAdjacencyMat(rt, userNum, itemNum):
     uiMat = uiMat.transpose()
     uiMat.resize((itemNum, userNum + itemNum))
     A = sparse.vstack([uiMat_upperPart, uiMat])
-    selfLoop = sparse.eye(userNum + itemNum)
+    # selfLoop = sparse.eye(userNum + itemNum)
     L = A
     L = sparse.coo_matrix(L)
     row = L.row
@@ -123,7 +123,7 @@ if __name__ == '__main__':
     userNum = rt['reviewerID'].max() + 1
     itemNum = rt['asin'].max() + 1
     ds = DM(rt)
-    embedSize, out_dim = 80, 64
+    embedSize, out_dim = 10, 5
     features = getFeatureMat(userNum, itemNum, embedSize)
     A = buildAdjacencyMat(ds, userNum, itemNum)
     gat = GATLayer(embedSize, out_dim, 0.2, 0.2)
