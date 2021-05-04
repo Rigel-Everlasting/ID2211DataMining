@@ -20,13 +20,13 @@ with gzip.open('./models/dataset/Digital_Music_5.json.gz', 'rb') as g:
         l = {k: line[k] for k in keys}
         data[i] = l
         
-        # TODO: Find the number of unique users
+        # Find the number of unique users
         users.add(data[i]["reviewerID"])
 
-        # TODO: Find the number of unique items(asin)
+        # TFind the number of unique items(asin)
         items.add(data[i]["asin"])
 
-        # TODO: Find the number of stars
+        # Find the number of stars
         if data[i]["overall"] == 5:
             fiveStar += 1
 
