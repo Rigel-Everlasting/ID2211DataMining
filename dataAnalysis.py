@@ -23,7 +23,7 @@ with gzip.open('./models/dataset/Digital_Music_5.json.gz', 'rb') as g:
         # Find the number of unique users
         users.add(data[i]["reviewerID"])
 
-        # TFind the number of unique items(asin)
+        # Find the number of unique items(asin)
         items.add(data[i]["asin"])
 
         # Find the number of stars
