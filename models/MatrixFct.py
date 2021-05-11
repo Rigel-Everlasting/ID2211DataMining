@@ -38,29 +38,15 @@ class biasSVD(Module):
         user_bias = self.userBias(user_idx)
         item_bias = self.itemBias(item_idx)
 
-        # unbiased_rating = user_embedding item_embedding.T
-        predictions = torch.mm(user_embedding, item_embedding.T)
-        # add bias
-        predictions = predictions + user_bias + item_bias.resize(item_bias.shape[0])
-        # add overall bias
-        predictions = predictions.flatten() + self.overall_bias
+        bias = user_bias + item_bias + self.overall_bias
+
+        predictions = torch.sum(torch.mul(user_embedding, item_embedding), dim=1) + bias.flatten()
+
+        # # unbiased_rating = user_embedding item_embedding.T
+        # predictions = torch.mm(user_embedding, item_embedding.T)
+        # # add bias
+        # predictions = predictions + user_bias + item_bias.resize(item_bias.shape[0])
+        # # add overall bias
+        # predictions = predictions.flatten() + self.overall_bias
 
         return predictions
-
-
-if __name__ == '__main__':
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-    rt = load_data()
-    user_num = rt['reviewerID'].max() + 1
-    item_num = rt['asin'].max() + 1
-    uidx = torch.LongTensor([i for i in range(user_num)])
-    iidx = torch.LongTensor([i for i in range(item_num)])
-    uidx = uidx.to(device)
-    iidx = iidx.to(device)
-    ds = DM(rt)
-
-    embed_size = 50
-    bias_SVD = biasSVD(user_num, item_num, embed_size).to(device)
-    predictions = bias_SVD(uidx, iidx)
-    print(predictions.shape)

@@ -14,6 +14,8 @@ from torch.utils.data import DataLoader
 import torch
 from torch.optim import Adam
 from torch.nn import MSELoss
+from MatrixFct import *
+
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
@@ -34,7 +36,7 @@ train,test = random_split(ds,[trainLen,len(ds)-trainLen])
 dl = DataLoader(train,batch_size=para['batch_size'],shuffle=True,pin_memory=True)
 
 model = GCF(userNum,itemNum, ds, 100, layers=[100,100,]).to(device)
-# model = SVD(userNum,itemNum,50).to(device)
+# model = biasSVD(userNum,itemNum,50).to(device)
 optim = Adam(model.parameters(), lr=para['lr'],weight_decay=0.001)
 lossfn = MSELoss()
 
